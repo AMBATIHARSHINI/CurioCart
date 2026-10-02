@@ -1,0 +1,92 @@
+@charset "UTF-8";
+
+/* General */
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+
+
+/* Navbar */
+
+.custom-navbar {
+    background-color: #171717;
+    padding: 15px 0;
+}
+
+.custom-navbar .navbar-brand {
+    font-size: 24px;
+    color: white;
+}
+
+.custom-navbar .nav-link {
+    color: white;
+    margin-left: 15px;
+}
+
+.custom-navbar .nav-link:hover {
+    color: #ffc107;
+}
+
+
+/* Home */
+
+.home-section {
+    min-height: calc(100vh - 76px);
+    display: flex;
+    align-items: center;
+}
+
+.home-title {
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.home-title span {
+    color: #ffc107;
+}
+
+.home-description {
+    font-size: 18px;
+    color: #666;
+    line-height: 1.7;
+}
+
+
+/* Login and Register */
+
+.auth-section {
+    min-height: calc(100vh - 76px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-card {
+    background-color: white;
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.auth-title {
+    text-align: center;
+    font-weight: bold;
+}
+
+.auth-subtitle {
+    text-align: center;
+    color: #777;
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 12px;
+}
+
+.auth-link {
+    text-decoration: none;
+    font-weight: bold;
+}
