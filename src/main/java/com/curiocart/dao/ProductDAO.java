@@ -89,4 +89,79 @@ public class ProductDAO {
 
         return products;
     }
+    public Product getProductById(int id) {
+
+        Product product = null;
+
+        try {
+
+            DBConnection db = new DBConnection();
+            con = db.getConnection();
+
+            String sql = "SELECT * FROM products WHERE id = ?";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                product = new Product();
+
+                product.setId(rs.getInt("id"));
+                product.setName(rs.getString("name"));
+                product.setDescription(rs.getString("description"));
+                product.setPrice(rs.getDouble("price"));
+                product.setDiscount(rs.getDouble("discount"));
+                product.setQuantity(rs.getInt("quantity"));
+                product.setCategory(rs.getString("category"));
+                product.setImage(rs.getString("image"));
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return product;
+    }
+    public String reduceStock(int productId, int quantity) {
+
+        String status = "";
+
+        try {
+
+            DBConnection db = new DBConnection();
+            con = db.getConnection();
+
+            String sql = "UPDATE products "
+                       + "SET quantity = quantity - ? "
+                       + "WHERE id = ? "
+                       + "AND quantity >= ?";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setInt(1, quantity);
+            ps.setInt(2, productId);
+            ps.setInt(3, quantity);
+
+            int rows = ps.executeUpdate();
+
+            if(rows > 0) {
+                status = "success";
+            }
+            else {
+                status = "failed";
+            }
+
+        }
+        catch(Exception e) {
+
+            System.out.println(e);
+            status = "failed";
+        }
+
+        return status;
+    }
 }

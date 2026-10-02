@@ -10,6 +10,7 @@ public class Product {
     private int quantity;
     private String category;
     private String image;
+    private int stockQuantity;
 
     public Product() {
     }
@@ -103,5 +104,12 @@ public class Product {
 
     public void setImage(String image) {
         this.image = image;
+    }
+    public int getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public void setStockQuantity(int stockQuantity) {
+        this.stockQuantity = stockQuantity;
     }
 }
