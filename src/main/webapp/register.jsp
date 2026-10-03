@@ -3,7 +3,6 @@
 
 <!DOCTYPE html>
 <html>
-
 <head>
 
     <title>Curiocart-Register</title>

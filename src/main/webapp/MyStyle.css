@@ -90,3 +90,118 @@ body {
     text-decoration: none;
     font-weight: bold;
 }
+/* ============================= */
+/* Curiocart Hero Banner */
+/* ============================= */
+
+.hero-banner {
+    background: linear-gradient(
+        135deg,
+        #212529,
+        #343a40,
+        #495057
+    );
+
+    min-height: 430px;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.2);
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+.hero-banner::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 300px;
+    height: 300px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 193, 7, 0.15);
+
+    top: -100px;
+    right: -80px;
+}
+
+
+.hero-banner::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 200px;
+    height: 200px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    bottom: -100px;
+    left: 35%;
+
+}
+
+
+.hero-shopping-icon {
+
+    font-size: 150px;
+
+    position: relative;
+
+    z-index: 2;
+
+    animation: shoppingFloat 3s ease-in-out infinite;
+
+}
+
+
+.hero-floating-card {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    background: white;
+
+    color: #212529;
+
+    padding: 12px 20px;
+
+    border-radius: 30px;
+
+    box-shadow:
+        0 8px 20px
+        rgba(0, 0, 0, 0.2);
+
+    position: relative;
+
+    z-index: 3;
+
+}
+
+@keyframes shoppingFloat {
+
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-12px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+
+}

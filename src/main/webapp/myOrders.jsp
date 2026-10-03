@@ -1,5 +1,7 @@
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
 <%@ page import="com.curiocart.model.Order" %>
+<%@ page import="com.curiocart.model.OrderItem" %>
 <%@ page import="com.curiocart.model.User" %>
 
 <%
@@ -13,6 +15,10 @@
 
     List<Order> orders =
             (List<Order>) request.getAttribute("orders");
+
+    Map<Integer, List<OrderItem>> orderItemsMap =
+            (Map<Integer, List<OrderItem>>)
+            request.getAttribute("orderItemsMap");
 %>
 
 <!DOCTYPE html>
@@ -76,7 +82,13 @@
 
                 <%
                     for(Order order : orders) {
+
+                        List<OrderItem> items =
+                                orderItemsMap.get(
+                                        order.getId()
+                                );
                 %>
+
 
                     <div class="col-md-6 mb-4">
 
@@ -90,6 +102,58 @@
 
                                 <hr>
 
+
+                                <!-- Order Items -->
+
+                                <h6>
+                                    Products
+                                </h6>
+
+                                <%
+                                    if(items != null &&
+                                       !items.isEmpty()) {
+
+                                        for(OrderItem item : items) {
+                                %>
+
+                                    <div class="border-bottom py-2">
+
+                                       <p class="mb-1">
+
+										    <strong>
+										        Product:
+										    </strong>
+										
+										    <%= item.getProductName() %>
+										
+										</p>
+                                        <p class="mb-1">
+
+                                            Quantity:
+
+                                            <%= item.getQuantity() %>
+
+                                        </p>
+
+                                        <p class="mb-0">
+
+                                            Price:
+
+                                            &#8377;<%= item.getPrice() %>
+
+                                        </p>
+
+                                    </div>
+
+                                <%
+                                        }
+                                    }
+                                %>
+
+
+                                <hr>
+
+
                                 <p>
                                     <strong>
                                         Order Date:
@@ -97,6 +161,7 @@
 
                                     <%= order.getOrderDate() %>
                                 </p>
+
 
                                 <p>
                                     <strong>
@@ -106,21 +171,25 @@
                                     &#8377;<%= order.getTotalAmount() %>
                                 </p>
 
-                                <p>
-                                    <strong>
-                                        Status:
-                                    </strong>
+                               <p class="mb-0">
 
-                                    <span class="badge bg-success">
-                                        <%= order.getStatus() %>
-                                    </span>
-                                </p>
+								    <strong>Status:</strong>
+								
+								    <span class="badge bg-success">
+								
+								        <%= order.getStatus() %>
+								
+								    </span>
+								
+								</p>
+
 
                             </div>
 
                         </div>
 
                     </div>
+
 
                 <%
                     }

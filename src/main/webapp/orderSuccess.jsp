@@ -38,7 +38,6 @@
             <h1 class="text-success">
                Order Placed Successfully!
             </h1>
-
             <p class="mt-3">
                 Thank you for shopping with Curiocart.
             </p>

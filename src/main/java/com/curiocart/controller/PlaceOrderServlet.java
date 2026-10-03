@@ -12,8 +12,10 @@ import jakarta.servlet.http.HttpSession;
 
 import com.curiocart.dao.CartDAO;
 import com.curiocart.dao.OrderDAO;
+import com.curiocart.dao.OrderItemDAO;
 import com.curiocart.dao.ProductDAO;
 import com.curiocart.model.Order;
+import com.curiocart.model.OrderItem;
 import com.curiocart.model.Product;
 import com.curiocart.model.User;
 
@@ -26,14 +28,15 @@ public class PlaceOrderServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
 
-        User user = (User) session.getAttribute("user");
+        User user =
+                (User) session.getAttribute("user");
 
         if(user == null) {
             response.sendRedirect("login.jsp");
             return;
         }
 
-        // Get total from checkout
+        // Get total
         String totalParameter =
                 request.getParameter("total");
 
@@ -51,23 +54,47 @@ public class PlaceOrderServlet extends HttpServlet {
             return;
         }
 
-        // Create Order object
+        // Create Order
         Order order = new Order();
 
         order.setUserId(user.getId());
         order.setTotalAmount(total);
         order.setStatus("PLACED");
 
-        // Save order
+        // Save Order
         OrderDAO orderDAO = new OrderDAO();
 
-        String orderStatus =
+        int orderId =
                 orderDAO.placeOrder(order);
 
-        if(orderStatus.equals("success")) {
+        if(orderId > 0) {
 
-            // Reduce product stock
-            ProductDAO productDAO = new ProductDAO();
+            // Save Order Items
+            OrderItemDAO orderItemDAO =
+                    new OrderItemDAO();
+
+            for(Product product : cartItems) {
+
+                OrderItem item =
+                        new OrderItem();
+
+                item.setOrderId(orderId);
+
+                item.setProductId(
+                        product.getId());
+
+                item.setQuantity(
+                        product.getQuantity());
+
+                item.setPrice(
+                        product.getPrice());
+
+                orderItemDAO.addOrderItem(item);
+            }
+
+            // Reduce Product Stock
+            ProductDAO productDAO =
+                    new ProductDAO();
 
             for(Product product : cartItems) {
 
@@ -77,11 +104,12 @@ public class PlaceOrderServlet extends HttpServlet {
                 );
             }
 
-            // Clear cart
+            // Clear Cart
             cartDAO.clearCart(user.getId());
 
-            // Go to success page
-            response.sendRedirect("orderSuccess.jsp");
+            // Order Success
+            response.sendRedirect(
+                    "orderSuccess.jsp");
 
         }
         else {

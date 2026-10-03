@@ -7,7 +7,8 @@
 <%
     User adminuser = (User) session.getAttribute("user");
 
-    if (adminuser == null || !adminuser.getRole().equals("ADMIN")) {
+    if (adminuser == null ||
+        !adminuser.getRole().equals("ADMIN")) {
 
         response.sendRedirect("login.jsp");
         return;
@@ -15,6 +16,7 @@
 %>
 
 <!DOCTYPE html>
+
 <html>
 
 <head>
@@ -24,7 +26,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet">
 
-    <link rel="stylesheet" href="MyStyle.css">
+    <link rel="stylesheet"
+          href="MyStyle.css">
 
 </head>
 
@@ -35,6 +38,9 @@
 
     <div class="container mt-5">
 
+
+        <!-- Dashboard Heading -->
+
         <div class="text-center mb-5">
 
             <h1>
@@ -42,7 +48,9 @@
             </h1>
 
             <p class="text-muted">
-                Welcome, <%= user.getName() %>!
+
+                Welcome, <%= adminuser.getName() %>!
+
             </p>
 
         </div>
@@ -60,11 +68,15 @@
                     <div class="card-body text-center">
 
                         <h4 class="card-title">
+
                             Add Product
+
                         </h4>
 
                         <p class="card-text">
+
                             Add new products to Curiocart.
+
                         </p>
 
                         <a href="addProduct.jsp"
@@ -90,11 +102,15 @@
                     <div class="card-body text-center">
 
                         <h4 class="card-title">
+
                             Manage Products
+
                         </h4>
 
                         <p class="card-text">
+
                             View, update and delete products.
+
                         </p>
 
                         <a href="products.jsp"
@@ -120,15 +136,19 @@
                     <div class="card-body text-center">
 
                         <h4 class="card-title">
+
                             Orders
+
                         </h4>
 
                         <p class="card-text">
+
                             View customer orders.
+
                         </p>
 
-                        <a href="#"
-                           class="btn btn-dark">
+                        <a href="AdminOrdersServlet"
+                           class="btn btn-warning">
 
                             View Orders
 

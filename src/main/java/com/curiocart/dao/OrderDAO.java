@@ -12,9 +12,9 @@ public class OrderDAO {
 
     Connection con = null;
 
-    public String placeOrder(Order order) {
+    public int placeOrder(Order order) {
 
-        String status = "";
+        int orderId = 0;
 
         try {
 
@@ -24,7 +24,11 @@ public class OrderDAO {
             String sql = "INSERT INTO orders(user_id, total_amount, status) "
                        + "VALUES (?, ?, ?)";
 
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps =
+                    con.prepareStatement(
+                            sql,
+                            java.sql.Statement.RETURN_GENERATED_KEYS
+                    );
 
             ps.setInt(1, order.getUserId());
             ps.setDouble(2, order.getTotalAmount());
@@ -33,19 +37,24 @@ public class OrderDAO {
             int rows = ps.executeUpdate();
 
             if(rows > 0) {
-                status = "success";
-            }
-            else {
-                status = "failed";
+
+                ResultSet rs =
+                        ps.getGeneratedKeys();
+
+                if(rs.next()) {
+
+                    orderId =
+                            rs.getInt(1);
+                }
             }
 
-        } catch(Exception e) {
+        }
+        catch(Exception e) {
 
             System.out.println(e);
-            status = "failed";
         }
 
-        return status;
+        return orderId;
     }
     public List<Order> getOrdersByUserId(int userId) {
 
@@ -89,5 +98,93 @@ public class OrderDAO {
         }
 
         return orders;
+    }
+    public List<Order> getAllOrders() {
+
+        List<Order> orders = new ArrayList<>();
+
+        try {
+
+            DBConnection db = new DBConnection();
+            con = db.getConnection();
+
+            String sql = "SELECT * FROM orders "
+                       + "ORDER BY id DESC";
+
+            PreparedStatement ps =
+                    con.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+
+                Order order = new Order();
+
+                order.setId(
+                        rs.getInt("id"));
+
+                order.setUserId(
+                        rs.getInt("user_id"));
+
+                order.setTotalAmount(
+                        rs.getDouble("total_amount"));
+
+                order.setOrderDate(
+                        rs.getString("order_date"));
+
+                order.setStatus(
+                        rs.getString("status"));
+
+                orders.add(order);
+            }
+
+        }
+        catch(Exception e) {
+
+            System.out.println(e);
+        }
+
+        return orders;
+    }
+    public String updateOrderStatus(int orderId, String status) {
+
+        String result = "";
+
+        try {
+
+            DBConnection db = new DBConnection();
+            con = db.getConnection();
+
+            String sql = "UPDATE orders "
+                       + "SET status = ? "
+                       + "WHERE id = ?";
+
+            PreparedStatement ps =
+                    con.prepareStatement(sql);
+
+            ps.setString(1, status);
+            ps.setInt(2, orderId);
+
+            int rows = ps.executeUpdate();
+
+            if(rows > 0) {
+
+                result = "success";
+
+            }
+            else {
+
+                result = "failed";
+            }
+
+        }
+        catch(Exception e) {
+
+            System.out.println(e);
+
+            result = "failed";
+        }
+
+        return result;
     }
 }

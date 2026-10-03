@@ -164,4 +164,122 @@ public class ProductDAO {
 
         return status;
     }
+    public List<Product> searchProducts(String search) {
+
+        List<Product> products = new ArrayList<>();
+
+        try {
+
+            DBConnection db = new DBConnection();
+            con = db.getConnection();
+
+            String sql = "SELECT * FROM products "
+                       + "WHERE name LIKE ? "
+                       + "OR category LIKE ?";
+
+            PreparedStatement ps =
+                    con.prepareStatement(sql);
+
+            ps.setString(1, "%" + search + "%");
+            ps.setString(2, "%" + search + "%");
+
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+
+                Product product = new Product();
+
+                product.setId(
+                        rs.getInt("id"));
+
+                product.setName(
+                        rs.getString("name"));
+
+                product.setDescription(
+                        rs.getString("description"));
+
+                product.setPrice(
+                        rs.getDouble("price"));
+
+                product.setDiscount(
+                        rs.getDouble("discount"));
+
+                product.setQuantity(
+                        rs.getInt("quantity"));
+
+                product.setCategory(
+                        rs.getString("category"));
+
+                product.setImage(
+                        rs.getString("image"));
+
+                products.add(product);
+            }
+
+        }
+        catch(Exception e) {
+
+            System.out.println(e);
+        }
+
+        return products;
+    }
+    public List<Product> searchProductsByCategory(String category) {
+
+        List<Product> products = new ArrayList<>();
+
+        try {
+
+            DBConnection db = new DBConnection();
+            con = db.getConnection();
+
+            String sql = "SELECT * FROM products "
+                       + "WHERE category = ?";
+
+            PreparedStatement ps =
+                    con.prepareStatement(sql);
+
+            ps.setString(1, category);
+
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+
+                Product product = new Product();
+
+                product.setId(
+                        rs.getInt("id"));
+
+                product.setName(
+                        rs.getString("name"));
+
+                product.setDescription(
+                        rs.getString("description"));
+
+                product.setPrice(
+                        rs.getDouble("price"));
+
+                product.setDiscount(
+                        rs.getDouble("discount"));
+
+                product.setQuantity(
+                        rs.getInt("quantity"));
+
+                product.setCategory(
+                        rs.getString("category"));
+
+                product.setImage(
+                        rs.getString("image"));
+
+                products.add(product);
+            }
+
+        }
+        catch(Exception e) {
+
+            System.out.println(e);
+        }
+
+        return products;
+    }
 }

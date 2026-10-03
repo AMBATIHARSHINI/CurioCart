@@ -11,7 +11,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import com.curiocart.dao.OrderDAO;
+import com.curiocart.dao.OrderItemDAO;
 import com.curiocart.model.Order;
+import com.curiocart.model.OrderItem;
 import com.curiocart.model.User;
 
 @WebServlet("/MyOrdersServlet")
@@ -26,7 +28,6 @@ public class MyOrdersServlet extends HttpServlet {
         User user =
                 (User) session.getAttribute("user");
 
-        // Check login
         if(user == null) {
 
             response.sendRedirect("login.jsp");
@@ -34,15 +35,46 @@ public class MyOrdersServlet extends HttpServlet {
         }
 
         // Get user's orders
-        OrderDAO dao = new OrderDAO();
+        OrderDAO orderDAO = new OrderDAO();
 
         List<Order> orders =
-                dao.getOrdersByUserId(user.getId());
+                orderDAO.getOrdersByUserId(
+                        user.getId()
+                );
 
-        // Send orders to JSP
-        request.setAttribute("orders", orders);
+        // Get order items
+        OrderItemDAO orderItemDAO =
+                new OrderItemDAO();
 
-        request.getRequestDispatcher("myOrders.jsp")
-               .forward(request, response);
+        // Store all order items
+        java.util.Map<Integer, List<OrderItem>> orderItemsMap =
+                new java.util.HashMap<>();
+
+        for(Order order : orders) {
+
+            List<OrderItem> items =
+                    orderItemDAO.getOrderItems(
+                            order.getId()
+                    );
+
+            orderItemsMap.put(
+                    order.getId(),
+                    items
+            );
+        }
+
+        request.setAttribute(
+                "orders",
+                orders
+        );
+
+        request.setAttribute(
+                "orderItemsMap",
+                orderItemsMap
+        );
+
+        request.getRequestDispatcher(
+                "myOrders.jsp"
+        ).forward(request, response);
     }
 }

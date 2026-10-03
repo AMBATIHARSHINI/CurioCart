@@ -7,11 +7,26 @@
 <%@ page import="com.curiocart.dao.ProductDAO" %>
 
 <%
-    // Get all products from database
+    /*
+     * CategoryServlet sends the filtered product list
+     * using the request attribute "products".
+     *
+     * If products.jsp is opened directly, there will be
+     * no request attribute, so we load all products.
+     */
 
-    ProductDAO dao = new ProductDAO();
+    List<Product> products =
+            (List<Product>) request.getAttribute("products");
 
-    List<Product> products = dao.getAllProducts();
+    if (products == null) {
+
+        ProductDAO dao = new ProductDAO();
+
+        products = dao.getAllProducts();
+    }
+
+    String selectedCategory =
+            (String) request.getAttribute("category");
 %>
 
 
@@ -29,6 +44,38 @@
     <link rel="stylesheet"
           href="MyStyle.css">
 
+    <style>
+
+        /* Product image alignment */
+
+        .product-image {
+
+            width: 100%;
+
+            height: 240px;
+            object-fit: contain;
+
+            object-position: center;
+           
+        }
+
+        /* Product cards */
+
+        .product-card {
+
+            transition: transform 0.2s ease,
+                        box-shadow 0.2s ease;
+        }
+
+        .product-card:hover {
+
+            transform: translateY(-5px);
+
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+    </style>
+
 </head>
 
 
@@ -40,7 +87,6 @@
     <%@ include file="navbar.jsp" %>
 
 
-
     <div class="container mt-5">
 
 
@@ -48,24 +94,61 @@
 
         <h2 class="text-center mb-5">
 
-            Our Products
+            <%
+                if (selectedCategory != null &&
+                    !selectedCategory.trim().isEmpty()) {
+            %>
+
+                <%= selectedCategory %> Products
+
+            <%
+                }
+                else {
+            %>
+
+                Our Products
+
+            <%
+                }
+            %>
 
         </h2>
-
 
 
         <div class="row">
 
 
             <%
-                for(Product product : products) {
+
+                if (products == null || products.isEmpty()) {
+
+            %>
+
+                <div class="col-12 text-center">
+
+                    <div class="alert alert-warning">
+
+                        No products found in this category.
+
+                    </div>
+
+                </div>
+
+            <%
+
+                }
+
+                else {
+
+                    for(Product product : products) {
+
             %>
 
 
                 <div class="col-md-4 mb-4">
 
 
-                    <div class="card h-100 shadow-sm">
+                    <div class="card h-100 shadow-sm product-card">
 
 
                         <!-- ========================= -->
@@ -73,32 +156,36 @@
                         <!-- ========================= -->
 
                         <%
+
                             if(product.getImage() != null &&
                                !product.getImage().isEmpty()) {
+
                         %>
 
 
                             <a href="productDetails.jsp?id=<%= product.getId() %>">
 
                                 <img src="<%= product.getImage() %>"
-                                     class="card-img-top"
-                                     style="height:220px;
-                                            object-fit:cover;">
+                                     class="card-img-top product-image"
+                                     alt="<%= product.getName() %>">
 
                             </a>
 
 
                         <%
+
                             }
+
                             else {
+
                         %>
 
 
                             <div class="d-flex
                                         align-items-center
                                         justify-content-center
-                                        bg-light"
-                                 style="height:220px;">
+                                        bg-light
+                                        product-image">
 
                                 <span class="text-muted">
 
@@ -110,9 +197,10 @@
 
 
                         <%
-                            }
-                        %>
 
+                            }
+
+                        %>
 
 
                         <div class="card-body">
@@ -136,7 +224,6 @@
                             </h5>
 
 
-
                             <!-- ========================= -->
                             <!-- Category -->
                             <!-- ========================= -->
@@ -146,7 +233,6 @@
                                 <%= product.getCategory() %>
 
                             </p>
-
 
 
                             <!-- ========================= -->
@@ -160,7 +246,6 @@
                             </p>
 
 
-
                             <!-- ========================= -->
                             <!-- Price -->
                             <!-- ========================= -->
@@ -172,13 +257,14 @@
                             </h5>
 
 
-
                             <!-- ========================= -->
                             <!-- Stock Status -->
                             <!-- ========================= -->
 
                             <%
+
                                 if(product.getQuantity() == 0) {
+
                             %>
 
 
@@ -190,8 +276,11 @@
 
 
                             <%
+
                                 }
+
                                 else if(product.getQuantity() <= 5) {
+
                             %>
 
 
@@ -204,8 +293,11 @@
 
 
                             <%
+
                                 }
+
                                 else {
+
                             %>
 
 
@@ -217,9 +309,10 @@
 
 
                             <%
-                                }
-                            %>
 
+                                }
+
+                            %>
 
 
                             <!-- ========================= -->
@@ -227,7 +320,9 @@
                             <!-- ========================= -->
 
                             <%
+
                                 if(product.getQuantity() > 0) {
+
                             %>
 
 
@@ -256,8 +351,11 @@
 
 
                             <%
+
                                 }
+
                                 else {
+
                             %>
 
 
@@ -270,7 +368,9 @@
 
 
                             <%
+
                                 }
+
                             %>
 
 
@@ -282,14 +382,17 @@
 
 
             <%
+
+                    }
+
                 }
+
             %>
 
 
         </div>
 
     </div>
-
 
 
     <!-- Bootstrap JavaScript -->
